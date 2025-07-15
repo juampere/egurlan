@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Administrar productos</title>
+  <link href="/css/output.css" rel="stylesheet" />
+</head>
+<body class="bg-fondo text-texto min-h-screen flex flex-col">
+
+  <header class="bg-primario text-white p-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4 sm:gap-0">
+    <h1 class="text-xl font-bold">Panel de productos</h1>
+    <div class="flex items-center gap-4">
+      <a href="panel.html" class="bg-secundario text-fondo px-4 py-2 rounded hover:opacity-90 font-semibold">
+        Cargar nuevo producto
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow p-6 max-w-6xl mx-auto">
+    <div class="mb-4 flex gap-4 items-center">
+      <select id="filtro-categoria" class="border px-3 py-2 rounded">
+        <option value="">Todas las categorías</option>
+      </select>
+
+      <input
+        type="text"
+        id="filtro-sku"
+        placeholder="Filtrar por SKU"
+        class="border px-3 py-2 rounded"
+      />
+    </div>
+
+    <table class="w-full bg-white rounded shadow overflow-hidden">
+      <thead class="bg-green-100 text-left">
+        <tr>
+          <th class="px-4 py-2">SKU</th>
+          <th class="px-4 py-2">Nombre</th>
+          <th class="px-4 py-2">Precio</th>
+          <th class="px-4 py-2">Categoría</th>
+          <th class="px-4 py-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-productos"></tbody>
+    </table>
+
+    <div id="paginacion" class="mt-4 flex justify-center gap-4"></div>
+  </main>
+
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="/terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="/politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/productos-admin.js"></script>
+</body>
+</html>

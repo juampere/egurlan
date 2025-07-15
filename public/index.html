@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Tienda Egurlan - Productos rurales y estructuras de calidad">
+  <meta name="author" content="Egurlan">
+  <meta name="robots" content="index, follow">
+  <title>Egurlan - Productos rurales y soluciones para el campo</title>
+  <link href="css/output.css" rel="stylesheet" />
+</head>
+<body class="bg-fondo text-texto">
+
+<!-- Header -->
+<header class="bg-primario text-fondo fixed w-full top-0 z-50 shadow">
+  <div class="container mx-auto flex items-center justify-between px-4 py-3 md:py-4">
+
+    <!-- Botón hamburguesa (solo mobile) -->
+    <button id="btnMenu" aria-label="Abrir menú móvil" class="md:hidden text-white focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Logo -->
+    <div class="flex-1 flex justify-center md:justify-start">
+      <a href="index.html" class="font-bold text-xl">
+        <img src="img/logo.svg" aria-hidden="true" alt="Logo Egurlan" class="h-8" />
+      </a>
+    </div>
+
+    <!-- Carrito visible en mobile -->
+    <div class="md:hidden relative ml-4">
+      <a href="carrito.html" class="text-white" aria-label="Ver carrito">
+        <img src="img/carrito.svg" alt="Carrito" class="w-6 h-6" />
+        <span id="contadorCarritoMobile" 
+              class="absolute -top-2 -right-3 bg-secundario text-fondo text-xs rounded-full px-1">0</span>
+      </a>
+    </div>
+
+    <!-- Buscador solo desktop -->
+    <form id="formBuscar" action="productos.html" method="GET" class="hidden md:flex flex-1 max-w-md mx-4" role="search">
+      <input
+        type="search"
+        name="busqueda"
+        placeholder="Buscar productos..."
+        class="flex-grow rounded-l px-3 py-1 text-texto focus:outline-none"
+        required
+        aria-label="Buscar productos"
+      />
+      <button type="submit" class="bg-secundario hover:opacity-90 px-3 rounded-r" aria-label="Buscar">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-fondo" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Menú + carrito en desktop -->
+    <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Menú principal">
+      <a href="index.html" class="hover:underline text-fondo">Inicio</a>
+      <a href="nosotros.html" class="hover:underline text-fondo">Nosotros</a>
+      <a href="productos.html" class="hover:underline text-fondo">Productos</a>
+      <a href="carrito.html" class="relative text-fondo" aria-label="Ver carrito">
+        <img src="img/carrito.svg" alt="Carrito" class="w-6 h-6" />
+        <span id="contadorCarrito" 
+              class="absolute -top-2 -right-3 bg-secundario text-fondo text-xs rounded-full px-1">0</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- Buscador mobile debajo -->
+  <form id="formBuscarMobile" class="md:hidden px-4 pb-3" role="search">
+    <div class="flex shadow rounded overflow-hidden">
+      <input id="input-busqueda-mobile" type="search" placeholder="Buscar productos..." 
+            class="w-full px-3 py-2 text-texto focus:outline-none" aria-label="Buscar productos" />
+      <button type="submit" 
+              class="bg-secundario hover:opacity-90 px-3 flex items-center justify-center" aria-label="Buscar">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-fondo" fill="none" 
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" 
+                d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <!-- Menú hamburguesa desplegable en mobile -->
+  <nav id="menuMobile" class="hidden bg-secundario text-fondo px-4 pb-4 space-y-3 md:hidden" aria-label="Menú móvil">
+    <a href="index.html" class="block hover:underline pt-4">Inicio</a>
+    <a href="nosotros.html" class="block hover:underline">Nosotros</a>
+    <a href="productos.html" class="block hover:underline">Productos</a>
+  </nav>
+</header>
+
+<!-- Contenido principal -->
+<main class="container mx-auto mt-32 p-4">
+  <h2 class="text-2xl font-semibold mb-4">Productos destacados</h2>
+  <div id="productos-destacados" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+
+  <!-- Sección de categorías -->
+  <section class="mt-12">
+    <h2 class="text-2xl font-semibold mb-6">Categorías</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <a href="productos.html?categoria=carpinteria" class="flex flex-col items-center p-4 bg-fondo rounded shadow hover:shadow-md transition">
+        <img src="img/carpinteria.svg" alt="Carpintería" class="w-16 h-16 mb-2" />
+        <span class="font-medium text-center text-texto">Carpintería</span>
+      </a>
+      <a href="productos.html?categoria=tecnologia" class="flex flex-col items-center p-4 bg-fondo rounded shadow hover:shadow-md transition">
+        <img src="img/tecno.svg" alt="Tecnología" class="w-16 h-16 mb-2" />
+        <span class="font-medium text-center text-texto">Tecnología</span>
+      </a>
+      <a href="productos.html?categoria=buloneria" class="flex flex-col items-center p-4 bg-fondo rounded shadow hover:shadow-md transition">
+        <img src="img/buloneria.svg" alt="Bulonería" class="w-16 h-16 mb-2" />
+        <span class="font-medium text-center text-texto">Bulonería</span>
+      </a>
+      <a href="productos.html?categoria=insumos" class="flex flex-col items-center p-4 bg-fondo rounded shadow hover:shadow-md transition">
+        <img src="img/insumos.svg" alt="Insumos" class="w-16 h-16 mb-2" />
+        <span class="font-medium text-center text-texto">Insumos</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <div class="container mx-auto text-center">
+      <a href="productos.html"
+        class="inline-block bg-secundario hover:opacity-90 text-fondo text-lg font-medium px-6 py-3 rounded shadow transition">
+        Ver todos los productos
+      </a>
+    </div>
+  </section>
+
+  <!-- Sección: Novedades -->
+  <section>
+    <h2 class="text-2xl font-semibold mb-6">Novedades</h2>
+    <div id="productos-novedades" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- Sección: Beneficios -->
+  <section class="py-10 mt-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl font-semibold mb-8">¿Por qué elegirnos?</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/flete.svg" alt="Envíos pactados" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Envíos pactados</h3>
+          <p class="text-sm text-texto">Coordinamos la entrega según tus necesidades en todo el país.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/calidad.svg" alt="Calidad garantizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Calidad garantizada</h3>
+          <p class="text-sm text-texto">Productos duraderos y resistentes, pensados para el trabajo rural.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/atencion.svg" alt="Atención personalizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Atención personalizada</h3>
+          <p class="text-sm text-texto">Estamos para ayudarte por WhatsApp, teléfono o email.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/pago.svg" alt="Pagos con tarjeta" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Pagos flexibles</h3>
+          <p class="text-sm text-texto">Aceptamos tarjetas, transferencias y otras formas de pago.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+  <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+    <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+    <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+    <span class="hidden sm:inline">|</span>
+    <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="js/contador-carrito.js" defer></script>
+<script src="js/index.js" defer></script>

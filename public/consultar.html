@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consultar - Egurlan</title>
+  <link href="css/output.css" rel="stylesheet">
+</head>
+<body class="bg-fondo text-texto">
+  <header class="bg-primario text-fondo p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">Realizar Consulta</h1>
+      <a href="carrito.html" class="underline">← Volver</a>
+    </div>
+  </header>
+
+  <main role="main" class="container mx-auto p-4 max-w-4xl bg-white mt-6 rounded shadow">
+    <form id="form-consultar" class="grid gap-4">
+      <h2 class="text-2xl font-semibold mb-2">Complete con sus datos</h2>
+
+      <input type="text" id="nombre" placeholder="Nombre completo" class="border p-3 rounded" required />
+      <input type="email" id="email" placeholder="Correo electrónico (opcional)" class="border p-3 rounded" />
+      <input type="tel" id="telefono" placeholder="Teléfono" class="border p-3 rounded" required />
+      <input type="text" id="localidad" placeholder="Localidad / Provincia" class="border p-3 rounded" required />
+      <textarea id="motivo" placeholder="Motivo de la consulta..." rows="4" class="border p-3 rounded" required></textarea>
+
+      <div id="formas-pago" class="mt-6 p-4 bg-yellow-50 border border-yellow-300 rounded hidden">
+        <h3 class="text-lg font-semibold mb-2">Formas de pago disponibles:</h3>
+        <ul class="list-disc pl-5 text-sm text-gray-700">
+          <li>Transferencia bancaria (enviaremos los datos por WhatsApp).</li>
+          <li>Tarjeta de crédito (con recargo del 10%).</li>
+          <li>Pago en efectivo al recibir (solo en zona cercana).</li>
+        </ul>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-2">
+        Al confirmar, se abrirá WhatsApp con tu consulta lista para enviar.  
+        Te responderemos a la brevedad. Horario: 08:00 a 16:00hs
+      </p>
+
+      <button type="submit" class="bg-secundario hover:opacity-90 text-white py-3 rounded font-semibold">
+        Consultar por WhatsApp
+      </button>
+
+      <p class="text-sm text-gray-600 mt-4">
+        ¿No tenés WhatsApp?  
+        Llamanos al 
+        <a href="tel:3446374568" class="text-primario font-semibold underline">3446374568</a> o escribinos a  
+        <a href="mailto:egurlanventas@gmail.com" class="text-primario font-semibold underline">egurlanventas@gmail.com</a>
+      </p>
+    </form>
+
+    <div id="mensaje-gracias" class="hidden mt-4 p-4 bg-green-100 text-green-800 rounded font-semibold">
+      ¡Gracias por tu consulta! Nos contactaremos a la brevedad.
+    </div>
+  </main>
+
+  <section class="py-10 mt-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl font-semibold mb-8">¿Por qué elegirnos?</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/flete.svg" alt="Envíos pactados" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Envíos pactados</h3>
+          <p class="text-sm text-texto">Coordinamos la entrega según tus necesidades en todo el país.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/calidad.svg" alt="Calidad garantizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Calidad garantizada</h3>
+          <p class="text-sm text-texto">Productos duraderos y resistentes, pensados para el trabajo rural.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/atencion.svg" alt="Atención personalizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Atención personalizada</h3>
+          <p class="text-sm text-texto">Estamos para ayudarte por WhatsApp, teléfono o email.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/pago.svg" alt="Pagos con tarjeta" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Pagos flexibles</h3>
+          <p class="text-sm text-texto">Aceptamos tarjetas, transferencias y otras formas de pago.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/consultar.js" defer></script>
+</body>
+</html>

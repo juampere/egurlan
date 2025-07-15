@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Realizar Pedido - Egurlan</title>
+  <link href="css/output.css" rel="stylesheet">
+</head>
+<body class="bg-fondo text-texto">
+  <header class="bg-primario text-fondo p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold" id="titulo-checkout">Realizar Pedido</h1>
+      <a href="carrito.html" class="underline" aria-label="Volver a la página principal">← Volver</a>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4 max-w-4xl bg-fondo mt-6 rounded shadow" role="main" aria-labelledby="titulo-checkout">
+    <form id="form-checkout" class="grid gap-4" novalidate>
+      <h2 class="text-2xl font-semibold">Datos del comprador</h2>
+
+      <input type="text" id="nombre" placeholder="Nombre completo" class="border p-3 rounded" required />
+      <input type="email" id="email" placeholder="Correo electrónico (opcional)" class="border p-3 rounded" />
+      <input type="tel" id="telefono" placeholder="Teléfono" class="border p-3 rounded" required />
+      <input type="text" id="localidad" placeholder="Localidad / Provincia" class="border p-3 rounded" required />
+
+      <h2 class="text-2xl font-semibold mt-6">Resumen del pedido</h2>
+      <div id="resumen-carrito" class="border rounded p-4 bg-gray-50 text-sm" aria-live="polite"></div>
+
+      <div id="formas-pago" class="hidden mt-6 p-4 bg-yellow-50 border border-yellow-300 rounded">
+        <h3 class="text-lg font-semibold mb-2">Formas de pago disponibles:</h3>
+        <ul class="list-disc pl-5 text-sm text-gray-700">
+          <li>Transferencia bancaria (enviaremos los datos por WhatsApp).</li>
+          <li>Tarjeta de crédito (con recargo del 10%).</li>
+          <li>Pago en efectivo al recibir (solo en zona cercana).</li>
+        </ul>
+      </div>
+
+      <p class="text-sm text-gray-600 mt-2">
+        Al confirmar, se abrirá WhatsApp con tu pedido listo para enviar.<br>
+        Te responderemos a la brevedad. Horario: 08:00 a 16:00hs
+      </p>
+
+      <button type="submit" class="bg-secundario hover:opacity-90 text-white py-3 rounded font-semibold">
+        Realizar pedido por WhatsApp
+      </button>
+
+      <p class="text-sm text-gray-600 mt-4">
+        ¿No tenés WhatsApp?
+        Llamanos al
+        <a href="tel:3489356690" class="text-primario font-semibold underline">3446374568</a> o escribinos a
+        <a href="mailto:egurlanventas@gmail.com" class="text-primario font-semibold underline">egurlanventas@gmail.com</a>
+      </p>
+    </form>
+
+    <div id="mensaje-gracias" class="hidden mt-4 p-4 bg-primario text-fondo rounded font-semibold" role="status">
+      ¡Gracias por tu pedido! Nos contactaremos a la brevedad.
+    </div>
+  </main>
+
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/checkout.js"></script>
+</body>
+</html>

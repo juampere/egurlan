@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Listado completo de productos disponibles en Egurlan">
+  <title>Productos | Egurlan</title>
+  <link href="css/output.css" rel="stylesheet">
+</head>
+<body class="bg-fondo text-texto min-h-screen flex flex-col">
+
+  <header class="bg-primario text-fondo p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">Catálogo de productos</h1>
+      <a href="index.html" class="underline">← Inicio</a>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-6 max-w-6xl flex-grow" role="main">
+    <!-- Filtros -->
+    <div id="filtros" class="mb-6 flex flex-wrap gap-4">
+
+      <div class="relative w-full md:w-1/3">
+        <input
+          type="text"
+          id="busqueda"
+          placeholder="Buscar producto..."
+          class="w-full pr-10 pl-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-secundario bg-white text-texto"
+        />
+        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-texto" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
+          </svg>
+        </div>
+      </div>
+
+      <select id="filtroCategoria" class="border p-2 rounded w-full md:w-1/4">
+        <option value="">Todas las categorías</option>
+      </select>
+      <select id="ordenPrecio" class="border p-2 rounded w-full md:w-1/4">
+        <option value="">Ordenar por precio</option>
+        <option value="asc">Menor a mayor</option>
+        <option value="desc">Mayor a menor</option>
+      </select>
+
+    </div>
+
+    <!-- Grilla de productos -->
+    <div
+      id="lista-productos"
+      class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      aria-live="polite"
+      aria-relevant="additions removals"
+    >
+      <!-- Se llenará desde JS -->
+    </div>
+    <div id="paginacion" class="flex justify-center mt-6 gap-2 flex-wrap"></div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+
+  <script src="js/productos.js"></script>
+</body>
+</html>

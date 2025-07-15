@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editar producto</title>
+  <link href="/css/output.css" rel="stylesheet" />
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+</head>
+<body class="bg-fondo text-texto">
+  <header class="bg-primario text-fondo p-4 flex justify-between">
+    <h1 class="font-bold">Editar producto</h1>
+    <a href="productos-admin.html" class="underline">← Volver al listado</a>
+  </header>
+
+  <main class="container mx-auto max-w-xl bg-white p-6 rounded shadow mt-8">
+    <form id="form-editar" class="flex flex-col gap-4">
+      <div>
+        <label class="font-medium">Nombre</label>
+        <input type="text" name="nombre" required class="w-full border border-gray-400 px-4 py-2 rounded" />
+      </div>
+
+      <div>
+        <label class="font-medium">SKU</label>
+        <input type="text" name="sku" required class="w-full border border-gray-400 px-4 py-2 rounded" />
+      </div>
+
+      <div>
+        <label class="font-medium">Precio</label>
+        <input type="number" name="precio" required class="w-full border border-gray-400 px-4 py-2 rounded" />
+      </div>
+
+      <div>
+        <label class="font-medium">Precio promocional (opcional)</label>
+        <input type="number" name="precioPromocional" class="w-full border border-gray-400 px-4 py-2 rounded" min="0" step="0.01" />
+      </div>
+
+      <div>
+        <label class="font-medium">Descripción</label>
+        <div id="editorDescripcion" class="border px-4 py-2 rounded" style="min-height: 120px;"></div>
+        <input type="hidden" name="descripcion" id="inputDescripcion" />
+      </div>
+
+      <div id="grupoImagenes">
+        <label class="font-medium">Fotos del producto</label>
+        <div id="previewImagenes" class="mt-2 flex gap-2 flex-wrap mb-4"></div>
+
+        <label class="font-medium">Agregar nuevas imágenes</label>
+        <input type="file" id="inputImagenNueva" accept="image/*" multiple />
+        <div id="previewNuevas" class="mt-2 flex gap-2 flex-wrap"></div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="checkbox" name="ventaDirecta" id="ventaDirecta" />
+        <label for="ventaDirecta">Venta directa</label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="checkbox" name="destacado" id="destacado" />
+        <label for="destacado">Producto destacado</label>
+      </div>
+
+      <div>
+        <label class="font-medium">Categoría</label>
+        <select name="categoria" id="selectCategoria" class="w-full border px-4 py-2 rounded">
+          <!-- Opciones se cargarán por JS -->
+        </select>
+      </div>
+
+      <div>
+        <label class="font-medium">Tags (separados por coma)</label>
+        <input type="text" name="tags" id="inputTags" class="w-full border border-gray-400 px-4 py-2 rounded" placeholder="Ej: madera, estructura, duradero" />
+      </div>
+
+      <button class="bg-secundario text-white px-6 py-3 rounded hover:opacity-90 w-max">
+        Guardar cambios
+      </button>
+    </form>
+
+    <p id="msg" class="mt-4 text-sm"></p>
+  </main>
+
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="js/editar-producto.js" defer></script>
+</body>
+</html>

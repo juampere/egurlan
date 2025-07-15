@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="999.99994"
+   height="287.79156"
+   viewBox="0 0 29.999998 8.633747"
+   fill="none"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="egurlan-logo-blanco.svg"
+   inkscape:version="1.4.2 (1:1.4.2+202505120737+ebf0e940d0)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.70975843"
+     inkscape:cx="532.57557"
+     inkscape:cy="310.66908"
+     inkscape:window-width="1920"
+     inkscape:window-height="1012"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <g
+     id="g1"
+     inkscape:export-filename="logo.png"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96"
+     style="fill:#f9f9f9">
+    <path
+       d="M 5.2929798,0 C 4.0415347,0 3.0260535,1.0154812 3.0260535,2.2669263 c 0,1.2514451 1.0154812,2.2669273 2.2669263,2.2669273 1.2514451,0 2.2669263,-1.0154822 2.2669263,-2.2669273 C 7.5599061,1.0154812 6.5444249,0 5.2929798,0 Z"
+       fill="#292D32"
+       id="path1"
+       style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:0.421362" />
+    <path
+       opacity="0.4"
+       d="M 1.403127,4.7529619 C 0.63203427,4.7529619 0,5.3807906 0,6.1560969 c 0,0.7753063 0.62782069,1.403135 1.403127,1.403135 0.7710927,0 1.4031443,-0.6278287 1.4031443,-1.403135 0,-0.7753063 -0.6320516,-1.403135 -1.4031443,-1.403135 z"
+       fill="#292D32"
+       id="path2"
+       style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:0.421362" />
+    <path
+       opacity="0.4"
+       d="m 5.7268141,6.2656936 c -0.6531101,0 -1.1840267,0.5309152 -1.1840267,1.1840267 0,0.6531101 0.5309166,1.1840266 1.1840267,1.1840266 0.6531114,0 1.1840266,-0.5309165 1.1840266,-1.1840266 0,-0.6531115 -0.5309152,-1.1840267 -1.1840266,-1.1840267 z"
+       fill="#292D32"
+       id="path3"
+       style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:0.421362" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:5.31679px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:1.32919"
+       x="7.8921676"
+       y="7.3214569"
+       id="text3"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:5.31679px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f9f9f9;fill-opacity:1;stroke-width:1.32919"
+         x="7.8921676"
+         y="7.3214569">egur</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-size:5.31679px;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Heavy';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:1.32919"
+       x="21.392099"
+       y="7.3755388"
+       id="text4"><tspan
+         sodipodi:role="line"
+         id="tspan4"
+         style="fill:#f9f9f9;fill-opacity:1;stroke-width:1.32919"
+         x="21.392099"
+         y="7.3755388">lan</tspan></text>
+  </g>
+</svg>

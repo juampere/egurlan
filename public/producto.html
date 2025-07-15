@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Producto - Tienda Ganadera</title>
+  <link href="css/output.css" rel="stylesheet" />
+</head>
+<body class="bg-fondo text-texto">
+  <header class="bg-primario text-fondo p-4">
+    <div class="container mx-auto flex justify-between items-center">
+
+      <a href="productos.html" id="btn-volver" class="underline">← Volver</a>
+
+      <a href="carrito.html" class="relative inline-block">
+        <img src="img/carrito.svg" alt="Carrito" class="w-6 h-6" />
+        <span id="contadorCarrito"
+              class="absolute -top-2 -right-2 bg-secundario text-fondo text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          0
+        </span>
+      </a>
+
+    </div>
+  </header>
+
+  <main role="main" class="container mx-auto mt-6 p-4 max-w-5xl bg-white rounded shadow flex flex-col md:flex-row gap-8">
+    <section class="md:w-2/3 flex flex-col items-center">
+      <img id="foto-principal" src="" alt="Foto producto" class="rounded shadow w-full max-w-xl h-auto object-cover" />
+      <div id="galeria" class="flex gap-3 mt-4 overflow-x-auto"></div>
+    </section>
+
+    <section class="md:w-1/3 flex flex-col p-4 gap-4">
+      <h1 id="nombre-producto" class="text-3xl font-bold"></h1>
+      <div id="precios-producto" class="text-2xl font-semibold text-green-700 flex gap-4 items-center"></div>
+      <button id="btn-agregar" class="bg-secundario hover:opacity-90 text-fondo px-6 py-3 rounded w-max">
+        Agregar al carrito
+      </button>
+      <div id="botones-producto" class="mt-4"></div>
+      <p id="descripcion-producto" class="text-gray-700 leading-relaxed"></p>
+      <div id="tags-producto" class="flex flex-wrap gap-2 mt-4"></div>
+    </section>
+  </main>
+
+  <section class="py-10 mt-12">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl font-semibold mb-8">¿Por qué elegirnos?</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/flete.svg" alt="Envíos pactados" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Envíos pactados</h3>
+          <p class="text-sm text-texto">Coordinamos la entrega según tus necesidades en todo el país.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/calidad.svg" alt="Calidad garantizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Calidad garantizada</h3>
+          <p class="text-sm text-texto">Productos duraderos y resistentes, pensados para el trabajo rural.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/atencion.svg" alt="Atención personalizada" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Atención personalizada</h3>
+          <p class="text-sm text-texto">Estamos para ayudarte por WhatsApp, teléfono o email.</p>
+        </div>
+        <div class="flex flex-col bg-fondo items-center text-center p-4 border rounded shadow hover:shadow-md transition">
+          <img src="img/pago.svg" alt="Pagos con tarjeta" class="w-12 h-12 mb-4" />
+          <h3 class="font-bold mb-2 text-texto">Pagos flexibles</h3>
+          <p class="text-sm text-texto">Aceptamos tarjetas, transferencias y otras formas de pago.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-primario text-fondo mt-10 p-6 text-center text-sm">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-center items-center gap-4">
+      <a href="terminos-condiciones.html" target="_blank" class="hover:underline">Términos y Condiciones</a>
+      <a href="politica-privacidad.html" target="_blank" class="hover:underline">Política de Privacidad</a>
+      <span class="hidden sm:inline">|</span>
+      <span>© 2025 Egurlan. Todos los derechos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/contador-carrito.js"></script>
+  <script src="js/producto.js"></script>
+
+  <div id="alertaCarrito" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-secundario text-fondo text-lg px-6 py-3 rounded-xl shadow-lg opacity-0 transition-opacity duration-500 hidden z-50 flex items-center gap-3">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    Producto agregado al carrito
+  </div>
+
+</body>
+</html>
