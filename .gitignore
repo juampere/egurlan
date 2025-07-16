@@ -7,3 +7,5 @@ uploads/
 # Ignorar productos.json si tiene datos reales
 productos.json
 categorias.json
+
+.env

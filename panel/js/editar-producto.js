@@ -26,9 +26,10 @@ function cargarCategorias() {
     .then(lista => {
       selectCategoria.innerHTML = `<option value="">Seleccionar categoría</option>`;
       lista.forEach(cat => {
+        const nombre = typeof cat === "string" ? cat : cat.nombre;
         const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
+        option.value = nombre;
+        option.textContent = nombre;
         selectCategoria.appendChild(option);
       });
     })
@@ -36,6 +37,7 @@ function cargarCategorias() {
       console.error("Error al cargar categorías:", err);
     });
 }
+
 
 // Función principal para cargar datos y asignar valores
 async function cargarDatos() {

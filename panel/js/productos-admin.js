@@ -12,12 +12,14 @@ fetch('http://localhost:3000/api/categorias')
   .then(res => res.json())
   .then(categorias => {
     categorias.forEach(cat => {
+      const nombre = typeof cat === 'string' ? cat : cat.nombre;
       const option = document.createElement('option');
-      option.value = cat.toLowerCase();
-      option.textContent = cat;
+      option.value = nombre.toLowerCase();
+      option.textContent = nombre;
       filtroCategoria.appendChild(option);
     });
   })
+
   .catch(err => {
     console.error('Error al cargar categorías:', err);
   });

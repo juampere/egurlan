@@ -1,3 +1,4 @@
+const conectarDB = require('./db');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -7,11 +8,9 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
-// Middleware para parsear JSON y URL-encoded
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// CORS para permitir frontend en localhost:3000
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
@@ -22,139 +21,136 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/panel', express.static(path.join(__dirname, 'panel')));
 
-// Archivos JSON
-const productosPath = path.join(__dirname, 'productos.json');
+// Paths a archivos que todavía usamos
 const categoriasPath = path.join(__dirname, 'categorias.json');
-const usuariosPath = path.join(__dirname, 'usuarios.json');
 
-// Rutas API
-
-app.get('/api/productos', (req, res) => {
-  fs.readFile(productosPath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'No se pudieron cargar los productos' });
-    res.json(JSON.parse(data));
-  });
+// Ruta: obtener todos los productos desde MongoDB
+app.get('/api/productos', async (req, res) => {
+  try {
+    const productos = await db.collection('productos').find().toArray();
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al cargar productos desde MongoDB' });
+  }
 });
 
-app.get('/api/productos/:id', (req, res) => {
+// Ruta: obtener un producto por ID (Mongo usa _id, pero mantenemos tu lógica temporal)
+app.get('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
-  fs.readFile(productosPath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'No se pudo leer el archivo' });
-
-    let productos = [];
-    try {
-      productos = JSON.parse(data);
-    } catch {
-      return res.status(500).json({ error: 'JSON mal formado' });
-    }
-
-    const producto = productos.find(p => p.id === id);
+  try {
+    const producto = await db.collection('productos').findOne({ id });
     if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
-
     res.json(producto);
-  });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al buscar producto' });
+  }
 });
 
+// Ruta: crear producto en MongoDB
+app.post('/api/productos', async (req, res) => {
+  try {
+    const nuevoProducto = req.body;
 
-app.post('/api/productos', (req, res) => {
-  const nuevoProducto = req.body;
-  fs.readFile(productosPath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'No se pudo leer el archivo de productos' });
-    let productos = [];
-    try {
-      productos = JSON.parse(data);
-    } catch {
-      return res.status(500).json({ error: 'JSON mal formado' });
-    }
-    const ultimoId = productos.length > 0 ? productos[productos.length - 1].id : 0;
+    // Generar ID incremental (busca el último producto y suma 1)
+    const ultimo = await db.collection('productos').find().sort({ id: -1 }).limit(1).toArray();
+    const ultimoId = ultimo.length > 0 ? ultimo[0].id : 0;
     nuevoProducto.id = ultimoId + 1;
-    productos.push(nuevoProducto);
-    fs.writeFile(productosPath, JSON.stringify(productos, null, 2), err => {
-      if (err) return res.status(500).json({ error: 'No se pudo guardar el producto' });
-      res.status(201).json({ mensaje: 'Producto guardado correctamente', producto: nuevoProducto });
-    });
-  });
+
+    const resultado = await db.collection('productos').insertOne(nuevoProducto);
+    res.status(201).json({ mensaje: 'Producto guardado', id: resultado.insertedId });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al guardar producto' });
+  }
 });
 
-app.put('/api/productos/:id', (req, res) => {
+// Ruta: editar producto
+app.put('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   const actualizado = req.body;
-  fs.readFile(productosPath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'No se pudo leer el archivo' });
-    let productos = [];
-    try {
-      productos = JSON.parse(data);
-    } catch {
-      return res.status(500).json({ error: 'JSON mal formado' });
-    }
-    const idx = productos.findIndex(p => p.id === id);
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
-    productos[idx] = { id, ...actualizado };
-    fs.writeFile(productosPath, JSON.stringify(productos, null, 2), err => {
-      if (err) return res.status(500).json({ error: 'No se pudo guardar' });
-      res.json({ mensaje: 'Producto actualizado', producto: productos[idx] });
-    });
-  });
+  try {
+    const resultado = await db.collection('productos').updateOne({ id }, { $set: actualizado });
+    if (resultado.matchedCount === 0) return res.status(404).json({ error: 'Producto no encontrado' });
+    res.json({ mensaje: 'Producto actualizado' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar producto' });
+  }
 });
 
-app.delete('/api/productos/:id', (req, res) => {
+
+// Ruta: eliminar producto
+app.delete('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
-  fs.readFile(productosPath, 'utf8', (err, data) => {
-    if (err) return res.status(500).json({ error: 'No se pudo leer el archivo' });
-    let productos = [];
-    try {
-      productos = JSON.parse(data);
-    } catch {
-      return res.status(500).json({ error: 'JSON mal formado' });
-    }
-    const nuevosProductos = productos.filter(p => p.id !== id);
-    if (nuevosProductos.length === productos.length) return res.status(404).json({ error: 'Producto no encontrado' });
-    fs.writeFile(productosPath, JSON.stringify(nuevosProductos, null, 2), err => {
-      if (err) return res.status(500).json({ error: 'No se pudo guardar el archivo' });
-      res.json({ mensaje: 'Producto eliminado correctamente' });
-    });
-  });
-});
 
-app.get('/api/categorias', (req, res) => {
-  fs.readFile(categoriasPath, 'utf8', (err, data) => {
-    if (err) {
-      if (err.code === 'ENOENT') return res.json([]);
-      return res.status(500).json({ error: 'No se pudieron cargar las categorías' });
-    }
-    try {
-      const categorias = JSON.parse(data);
-      res.json(categorias);
-    } catch {
-      res.status(500).json({ error: 'JSON mal formado en categorías' });
-    }
-  });
-});
+  try {
+    // Buscar el producto
+    const producto = await db.collection('productos').findOne({ id });
+    if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
 
-app.post('/api/categorias', (req, res) => {
-  const { nombre } = req.body;
-  if (!nombre) return res.status(400).json({ error: 'Falta el nombre de la categoría' });
-  fs.readFile(categoriasPath, 'utf8', (err, data) => {
-    let categorias = [];
-    if (!err) {
-      try {
-        categorias = JSON.parse(data);
-      } catch {
-        return res.status(500).json({ error: 'JSON mal formado en categorías' });
+    // Borrar imágenes si existen
+    if (Array.isArray(producto.fotos)) {
+      for (const foto of producto.fotos) {
+        if (typeof foto === 'string' && foto.startsWith('/uploads/')) {
+          const ruta = path.join(__dirname, foto);
+          fs.unlink(ruta, err => {
+            if (err) {
+              console.warn(`⚠️ No se pudo borrar: ${ruta}`);
+            } else {
+              console.log(`🧹 Imagen borrada: ${ruta}`);
+            }
+          });
+        }
       }
     }
-    if (categorias.some(cat => cat.toLowerCase() === nombre.toLowerCase())) {
-      return res.status(400).json({ error: 'Categoría ya existe' });
-    }
-    categorias.push(nombre);
-    fs.writeFile(categoriasPath, JSON.stringify(categorias, null, 2), err => {
-      if (err) return res.status(500).json({ error: 'No se pudo guardar la categoría' });
-      res.status(201).json({ mensaje: 'Categoría agregada', categorias });
-    });
-  });
+
+    // Eliminar el producto
+    const resultado = await db.collection('productos').deleteOne({ id });
+    res.json({ mensaje: 'Producto eliminado' });
+
+  } catch (error) {
+    console.error('❌ Error al eliminar producto:', error);
+    res.status(500).json({ error: 'Error al eliminar producto' });
+  }
 });
 
-// Subir imagen
+// Rutas de categorías (siguen en JSON por ahora)
+app.get('/api/categorias', async (req, res) => {
+  try {
+    const categorias = await db.collection('categorias').find().toArray();
+    res.json(categorias);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al cargar las categorías' });
+  }
+});
+
+app.post('/api/categorias', async (req, res) => {
+  const { nombre } = req.body;
+
+  if (!nombre || nombre.trim() === '') {
+    return res.status(400).json({ error: 'Falta el nombre de la categoría' });
+  }
+
+  try {
+    // Buscamos si la categoría ya existe (ignorando mayúsculas/minúsculas)
+    const categoriaExistente = await db.collection('categorias').findOne({
+      nombre: { $regex: new RegExp(`^${nombre}$`, 'i') }
+    });
+
+    if (categoriaExistente) {
+      return res.status(400).json({ error: 'La categoría ya existe' });
+    }
+
+    // Insertamos la nueva categoría
+    const resultado = await db.collection('categorias').insertOne({ nombre: nombre.trim() });
+
+    res.status(201).json({ mensaje: 'Categoría agregada', categoria: { _id: resultado.insertedId, nombre: nombre.trim() } });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error al guardar la categoría' });
+  }
+});
+
+
+// Subida de imágenes
 const uploadDir = path.join(__dirname, 'uploads');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
@@ -171,6 +167,12 @@ app.post('/api/upload', upload.single('imagen'), (req, res) => {
   res.json({ url: `/uploads/${req.file.filename}` });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+// Conexión a la base de datos
+let db;
+conectarDB().then((database) => {
+  db = database;
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
 });

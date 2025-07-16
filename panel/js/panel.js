@@ -26,8 +26,8 @@ async function cargarCategorias() {
     selectCategoria.innerHTML = `<option value="">Seleccionar categoría</option>`;
     categorias.forEach(cat => {
       const option = document.createElement("option");
-      option.value = cat;
-      option.textContent = cat;
+      option.value = cat.nombre;
+      option.textContent = cat.nombre;
       selectCategoria.appendChild(option);
     });
   } catch (err) {

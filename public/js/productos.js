@@ -48,18 +48,19 @@ function cargarCategoriasDesdeBackend() {
     .then(categorias => {
       categorias.forEach(cat => {
         const option = document.createElement("option");
-        option.value = cat.toLowerCase();
-        option.textContent = cat;
+        option.value = cat.nombre.toLowerCase();     // 👈 usamos cat.nombre
+        option.textContent = cat.nombre;
         filtroSelect.appendChild(option);
       });
 
       if (parametros.categoria) {
-        const existe = categorias.some(c => c.toLowerCase() === parametros.categoria);
+        const existe = categorias.some(c => c.nombre.toLowerCase() === parametros.categoria);
         if (existe) filtroSelect.value = parametros.categoria;
       }
 
       filtrarYMostrar();
     })
+
     .catch(err => {
       console.error("Error al cargar categorías:", err);
       filtrarYMostrar(); // mostrar productos igual
@@ -130,7 +131,7 @@ function filtrarYMostrar() {
 
   let filtrados = productosGlobal.filter(p => {
     const matchNombre = p.nombre.toLowerCase().includes(texto);
-    const matchCategoria = categoria === "" || (p.categoria?.toLowerCase() === categoria);
+    const matchCategoria = categoria === "" || (typeof p.categoria === "string" && p.categoria.toLowerCase() === categoria);
     return matchNombre && matchCategoria;
   });
 
@@ -146,6 +147,7 @@ function filtrarYMostrar() {
   mostrarProductos(filtrados);
   mostrarPaginacion(filtrados);
 }
+
 
 function mostrarPaginacion(lista) {
   if (!paginacionContainer) return;
