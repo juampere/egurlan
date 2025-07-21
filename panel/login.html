@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar sesión</title>
+  <link href="../css/output.css" rel="stylesheet" />
+</head>
+<body class="bg-fondo text-texto flex items-center justify-center min-h-screen">
+  <main class="bg-white shadow rounded p-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Iniciar sesión</h1>
+    <form class="space-y-4">
+      <div>
+        <label for="usuario" class="block mb-1">Usuario</label>
+        <input type="text" id="usuario" required class="w-full border rounded px-3 py-2" />
+      </div>
+      <div>
+        <label for="contrasena" class="block mb-1">Contraseña</label>
+        <input type="password" id="contrasena" required class="w-full border rounded px-3 py-2" />
+      </div>
+      <p id="mensaje-error" class="text-red-600 hidden text-sm"></p>
+      <button type="submit" class="bg-primario text-white w-full py-2 rounded hover:opacity-90">
+        Entrar
+      </button>
+    </form>
+  </main>
+  <script src="js/login.js" defer></script>
+</body>
+</html>

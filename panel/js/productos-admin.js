@@ -7,6 +7,25 @@ const tabla = document.getElementById("tabla-productos");
 const filtroCategoria = document.getElementById("filtro-categoria");
 const filtroSku = document.getElementById("filtro-sku");
 
+// Manejo del botón cerrar sesión
+document.getElementById("btn-logout").addEventListener("click", async () => {
+  try {
+    const res = await fetch("/api/logout", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (res.ok) {
+      window.location.href = "/panel/login.html";
+    } else {
+      alert("No se pudo cerrar sesión.");
+    }
+  } catch {
+    alert("Error al conectar con el servidor.");
+  }
+});
+
+
 // Cargar categorías
 fetch('http://localhost:3000/api/categorias')
   .then(res => res.json())

@@ -140,23 +140,31 @@ function mostrarProducto() {
       });
     }
 
+    // ---- REEMPLAZAR ESTA PARTE: galería de imágenes ----
     const galeriaDiv = document.getElementById("galeria");
     galeriaDiv.innerHTML = "";
 
-    const fotos = Array.isArray(producto.fotos) && producto.fotos.length ? producto.fotos : ["https://placehold.co/400x300?text=Sin+imagen"];
+    const fotos = Array.isArray(producto.fotos) && producto.fotos.length
+      ? producto.fotos
+      : [{ url: "https://placehold.co/400x300?text=Sin+imagen" }];
 
-    fotos.forEach((foto, i) => {
-      const urlFoto = foto.startsWith("/uploads/") ? `${BASE_URL}${foto}` : foto;
+    fotos.forEach((fotoObj, i) => {
+      const urlFoto = fotoObj.url; // saco la url directo porque fotos ahora es array de objetos
       const miniatura = crearMiniatura(urlFoto, `${producto.nombre} detalle ${i + 1}`, i === 0);
+
       miniatura.addEventListener("click", () => {
         actualizarFotoPrincipal(urlFoto);
-        galeriaDiv.querySelectorAll("img").forEach((img) => img.classList.remove("border-secundario", "shadow-md"));
+        galeriaDiv.querySelectorAll("img").forEach(img => {
+          img.classList.remove("border-secundario", "shadow-md");
+        });
         miniatura.classList.add("border-secundario", "shadow-md");
       });
+
       galeriaDiv.appendChild(miniatura);
     });
 
-    actualizarFotoPrincipal(fotos[0].startsWith("/uploads/") ? `${BASE_URL}${fotos[0]}` : fotos[0]);
+    actualizarFotoPrincipal(fotos[0].url);
+    // ---- FIN REEMPLAZO ----
 
     document.getElementById("btn-agregar").onclick = () => agregarAlCarrito(producto);
 
@@ -175,6 +183,7 @@ function mostrarProducto() {
     }
   });
 }
+
 
 function setVolverConFiltros() {
   const btnVolver = document.getElementById("btn-volver");

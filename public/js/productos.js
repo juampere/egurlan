@@ -48,7 +48,7 @@ function cargarCategoriasDesdeBackend() {
     .then(categorias => {
       categorias.forEach(cat => {
         const option = document.createElement("option");
-        option.value = cat.nombre.toLowerCase();     // 👈 usamos cat.nombre
+        option.value = cat.nombre.toLowerCase();
         option.textContent = cat.nombre;
         filtroSelect.appendChild(option);
       });
@@ -60,7 +60,6 @@ function cargarCategoriasDesdeBackend() {
 
       filtrarYMostrar();
     })
-
     .catch(err => {
       console.error("Error al cargar categorías:", err);
       filtrarYMostrar(); // mostrar productos igual
@@ -91,9 +90,11 @@ function mostrarProductos(lista) {
     }
 
     const img = document.createElement("img");
-    img.src = producto.fotos?.[0]?.startsWith("/uploads/")
+    img.src = (typeof producto.fotos?.[0] === "string" && producto.fotos[0].startsWith("/uploads/"))
       ? `http://localhost:3000${producto.fotos[0]}`
-      : producto.fotos?.[0] || "https://placehold.co/400x300?text=Sin+imagen";
+      : (typeof producto.fotos?.[0] === "object" && producto.fotos[0]?.url)
+        ? producto.fotos[0].url
+        : "https://placehold.co/400x300?text=Sin+imagen";
     img.alt = producto.nombre;
     img.className = "w-full h-48 object-cover rounded mb-3";
 
@@ -147,7 +148,6 @@ function filtrarYMostrar() {
   mostrarProductos(filtrados);
   mostrarPaginacion(filtrados);
 }
-
 
 function mostrarPaginacion(lista) {
   if (!paginacionContainer) return;

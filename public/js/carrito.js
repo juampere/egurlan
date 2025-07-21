@@ -48,10 +48,10 @@ function mostrarCarrito() {
     const subtotal = prod.precio * prod.cantidad;
     total += subtotal;
 
-    const urlMiniatura = prod.fotos?.[0]
-      ? (prod.fotos[0].startsWith("/uploads/")
-          ? "http://localhost:3000" + prod.fotos[0]
-          : prod.fotos[0])
+    const urlMiniatura = prod.fotos?.[0]?.url
+      ? (prod.fotos[0].url.startsWith("/uploads/")
+          ? "http://localhost:3000" + prod.fotos[0].url
+          : prod.fotos[0].url)
       : "https://placehold.co/600x400?text=Sin+Imagen";
 
     const div = document.createElement("div");
@@ -78,13 +78,11 @@ function mostrarCarrito() {
       </div>
     `;
 
-
     contenedor.appendChild(div);
   });
 
   resumen.textContent = `Total: $${total.toLocaleString()}`;
 
-  // Botones + y -
   contenedor.querySelectorAll("button").forEach(btn => {
     const id = parseInt(btn.dataset.id);
     const action = btn.dataset.action;
@@ -100,7 +98,7 @@ function agregarUnidad(id) {
   const carrito = obtenerCarrito();
   const idx = carrito.findIndex(p => p.id === id);
   if (idx !== -1) {
-    carrito.push(carrito[idx]); // duplicar
+    carrito.push(carrito[idx]);
     guardarCarrito(carrito);
     mostrarCarrito();
   }

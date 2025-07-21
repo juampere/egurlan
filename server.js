@@ -1,30 +1,55 @@
+require('dotenv').config(); // ← agregado para usar variables del archivo .env
 const conectarDB = require('./db');
 const express = require('express');
+const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
+let db; 
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+app.use(session({
+  secret: 'secreto_super_seguro',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: 1000 * 60 * 60
+  }
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: '*',
   credentials: true
 }));
 
-// Archivos estáticos
+app.use("/panel", (req, res, next) => {
+  const archivosPublicos = ["/login.html", "/js/login.js"];
+  if (archivosPublicos.includes(req.path) || req.session.usuario) {
+    return next();
+  }
+  res.redirect("/panel/login.html");
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/panel', express.static(path.join(__dirname, 'panel')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Paths a archivos que todavía usamos
-const categoriasPath = path.join(__dirname, 'categorias.json');
-
-// Ruta: obtener todos los productos desde MongoDB
 app.get('/api/productos', async (req, res) => {
   try {
     const productos = await db.collection('productos').find().toArray();
@@ -34,7 +59,6 @@ app.get('/api/productos', async (req, res) => {
   }
 });
 
-// Ruta: obtener un producto por ID (Mongo usa _id, pero mantenemos tu lógica temporal)
 app.get('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   try {
@@ -46,16 +70,12 @@ app.get('/api/productos/:id', async (req, res) => {
   }
 });
 
-// Ruta: crear producto en MongoDB
 app.post('/api/productos', async (req, res) => {
   try {
     const nuevoProducto = req.body;
-
-    // Generar ID incremental (busca el último producto y suma 1)
     const ultimo = await db.collection('productos').find().sort({ id: -1 }).limit(1).toArray();
     const ultimoId = ultimo.length > 0 ? ultimo[0].id : 0;
     nuevoProducto.id = ultimoId + 1;
-
     const resultado = await db.collection('productos').insertOne(nuevoProducto);
     res.status(201).json({ mensaje: 'Producto guardado', id: resultado.insertedId });
   } catch (error) {
@@ -63,7 +83,6 @@ app.post('/api/productos', async (req, res) => {
   }
 });
 
-// Ruta: editar producto
 app.put('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
   const actualizado = req.body;
@@ -76,43 +95,35 @@ app.put('/api/productos/:id', async (req, res) => {
   }
 });
 
-
-// Ruta: eliminar producto
 app.delete('/api/productos/:id', async (req, res) => {
   const id = parseInt(req.params.id);
 
   try {
-    // Buscar el producto
     const producto = await db.collection('productos').findOne({ id });
+
     if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
 
-    // Borrar imágenes si existen
-    if (Array.isArray(producto.fotos)) {
+    if (producto.fotos && Array.isArray(producto.fotos)) {
       for (const foto of producto.fotos) {
-        if (typeof foto === 'string' && foto.startsWith('/uploads/')) {
-          const ruta = path.join(__dirname, foto);
-          fs.unlink(ruta, err => {
-            if (err) {
-              console.warn(`⚠️ No se pudo borrar: ${ruta}`);
-            } else {
-              console.log(`🧹 Imagen borrada: ${ruta}`);
-            }
-          });
+        if (foto.public_id) {
+          try {
+            await cloudinary.uploader.destroy(foto.public_id);
+          } catch {
+            // Si no se puede borrar una imagen, no cortamos el proceso, solo seguimos
+          }
         }
       }
     }
 
-    // Eliminar el producto
-    const resultado = await db.collection('productos').deleteOne({ id });
-    res.json({ mensaje: 'Producto eliminado' });
+    await db.collection('productos').deleteOne({ id });
+    res.json({ mensaje: 'Producto eliminado correctamente' });
 
   } catch (error) {
-    console.error('❌ Error al eliminar producto:', error);
     res.status(500).json({ error: 'Error al eliminar producto' });
   }
 });
 
-// Rutas de categorías (siguen en JSON por ahora)
+
 app.get('/api/categorias', async (req, res) => {
   try {
     const categorias = await db.collection('categorias').find().toArray();
@@ -124,13 +135,11 @@ app.get('/api/categorias', async (req, res) => {
 
 app.post('/api/categorias', async (req, res) => {
   const { nombre } = req.body;
-
   if (!nombre || nombre.trim() === '') {
     return res.status(400).json({ error: 'Falta el nombre de la categoría' });
   }
 
   try {
-    // Buscamos si la categoría ya existe (ignorando mayúsculas/minúsculas)
     const categoriaExistente = await db.collection('categorias').findOne({
       nombre: { $regex: new RegExp(`^${nombre}$`, 'i') }
     });
@@ -139,38 +148,90 @@ app.post('/api/categorias', async (req, res) => {
       return res.status(400).json({ error: 'La categoría ya existe' });
     }
 
-    // Insertamos la nueva categoría
     const resultado = await db.collection('categorias').insertOne({ nombre: nombre.trim() });
 
-    res.status(201).json({ mensaje: 'Categoría agregada', categoria: { _id: resultado.insertedId, nombre: nombre.trim() } });
+    res.status(201).json({
+      mensaje: 'Categoría agregada',
+      categoria: { _id: resultado.insertedId, nombre: nombre.trim() }
+    });
 
   } catch (error) {
     res.status(500).json({ error: 'Error al guardar la categoría' });
   }
 });
 
-
-// Subida de imágenes
-const uploadDir = path.join(__dirname, 'uploads');
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const base = path.basename(file.originalname, ext);
-    cb(null, `${base}-${Date.now()}${ext}`);
-  }
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'productos',
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+  },
 });
+
 const upload = multer({ storage });
 
 app.post('/api/upload', upload.single('imagen'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' });
-  res.json({ url: `/uploads/${req.file.filename}` });
+
+  res.json({
+    url: req.file.path,             
+    public_id: req.file.filename    
+  });
 });
 
-// Conexión a la base de datos
-let db;
+
+
+// LOGIN
+app.post('/api/login', async (req, res) => {
+  const { usuario, contrasena } = req.body;
+
+  if (!usuario || !contrasena) {
+    return res.status(400).json({ error: 'Faltan datos' });
+  }
+
+  try {
+    const user = await db.collection('usuarios').findOne({ usuario });
+
+    if (!user || user.password !== contrasena) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+    }
+
+    req.session.usuario = usuario;
+    res.json({ mensaje: 'Login correcto' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno' });
+  }
+});
+
+app.get('/api/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.json({ mensaje: 'Sesión cerrada' });
+  });
+});
+
+app.get('/api/verificar-sesion', (req, res) => {
+  if (req.session.usuario) {
+    res.json({ logueado: true });
+  } else {
+    res.status(401).json({ logueado: false });
+  }
+});
+
+// ARRANQUE
 conectarDB().then((database) => {
   db = database;
+
+  const adminPassword = process.env.ADMIN_PASSWORD || '1234';
+
+  db.collection('usuarios').findOne({ usuario: 'admin' }).then(existe => {
+    if (!existe) {
+      db.collection('usuarios').insertOne({ usuario: 'admin', password: adminPassword })
+        .then(() => console.log('🧑 Usuario admin creado'))
+        .catch(err => console.error('❌ Error al crear usuario:', err));
+    } else {
+      console.log('✅ Usuario admin ya existe');
+    }
+  });
 
   app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

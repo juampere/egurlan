@@ -39,9 +39,9 @@ function crearCardProducto(prod) {
   imagenWrapper.className = "relative";
 
   const img = document.createElement("img");
-  img.src = prod.fotos?.[0]?.startsWith("/uploads/")
-    ? `http://localhost:3000${prod.fotos[0]}`
-    : prod.fotos?.[0] || "https://placehold.co/400x300?text=Sin+imagen";
+  img.src = prod.fotos?.[0]?.url?.startsWith("/uploads/")
+    ? `http://localhost:3000${prod.fotos[0].url}`
+    : prod.fotos?.[0]?.url || "https://placehold.co/400x300?text=Sin+imagen";
   img.alt = prod.nombre;
   img.className = "w-full h-48 object-cover";
 
@@ -86,6 +86,7 @@ function crearCardProducto(prod) {
   card.appendChild(contenido);
   return card;
 }
+
 
 // Cargar productos y mostrar destacados + novedades
 fetch('http://localhost:3000/api/productos')

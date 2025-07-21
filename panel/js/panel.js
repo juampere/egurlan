@@ -11,6 +11,24 @@ const formulario = document.getElementById("formulario-producto");
 let archivosSeleccionados = [];
 let urlImagenesSubidas = [];
 
+// Manejo del botón cerrar sesión
+document.getElementById("btn-logout").addEventListener("click", async () => {
+  try {
+    const res = await fetch("/api/logout", {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (res.ok) {
+      window.location.href = "/panel/login.html";
+    } else {
+      alert("No se pudo cerrar sesión.");
+    }
+  } catch {
+    alert("Error al conectar con el servidor.");
+  }
+});
+
 const quill = new Quill('#editorDescripcion', {
   theme: 'snow',
   placeholder: 'Escribe la descripción aquí...',
@@ -200,7 +218,11 @@ formulario.addEventListener("submit", async e => {
           body: formData
         });
         const data = await res.json();
-        urlImagenesSubidas.push(data.url);
+        urlImagenesSubidas.push({
+          url: data.url,
+          public_id: data.public_id
+        });
+
       } catch (err) {
         mensaje.textContent = "Error al subir imágenes";
         mensaje.className = "mt-4 px-4 py-2 text-sm rounded bg-red-100 text-red-700 border border-red-300";

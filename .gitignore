@@ -1,11 +1,12 @@
 # Ignorar node_modules
 /node_modules/
 
-# Ignorar carpeta uploads (imágenes subidas)
-uploads/
-
-# Ignorar productos.json si tiene datos reales
-productos.json
-categorias.json
-
+# Ignorar env
 .env
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Salida de build de Tailwind
+public/css/output.css

@@ -19,7 +19,6 @@ const quill = new Quill('#editorDescripcion', {
   }
 });
 
-// Función para cargar categorías y devolver una promesa
 function cargarCategorias() {
   return fetch("http://localhost:3000/api/categorias")
     .then(res => res.json())
@@ -38,8 +37,6 @@ function cargarCategorias() {
     });
 }
 
-
-// Función principal para cargar datos y asignar valores
 async function cargarDatos() {
   await cargarCategorias();
 
@@ -55,7 +52,7 @@ async function cargarDatos() {
         return;
       }
 
-      imagenesExistentes = [...p.fotos];
+      imagenesExistentes = (p.fotos || []);
 
       form.nombre.value         = p.nombre;
       form.sku.value            = p.sku || "";
@@ -68,14 +65,12 @@ async function cargarDatos() {
       quill.root.innerHTML      = p.descripcion || "";
 
       previewImagenes.innerHTML = "";
-      imagenesExistentes.forEach(url => {
+      imagenesExistentes.forEach(foto => {
         const contenedor = document.createElement("div");
         contenedor.className = "relative w-24 h-24";
 
         const img = document.createElement("img");
-        img.src = url.startsWith("/uploads/")
-          ? `http://localhost:3000${url}`
-          : url;
+        img.src = foto.url;
         img.className = "w-24 h-24 object-cover rounded shadow";
 
         const btnEliminar = document.createElement("button");
@@ -84,7 +79,7 @@ async function cargarDatos() {
         btnEliminar.type = "button";
         btnEliminar.addEventListener("click", () => {
           contenedor.remove();
-          imagenesExistentes = imagenesExistentes.filter(f => f !== url);
+          imagenesExistentes = imagenesExistentes.filter(f => f !== foto);
         });
 
         contenedor.appendChild(img);
@@ -100,7 +95,6 @@ async function cargarDatos() {
 
 cargarDatos();
 
-// Manejo de subida de nuevas imágenes
 inputImagenNueva.addEventListener("change", async () => {
   const archivos = inputImagenNueva.files;
   if (!archivos || archivos.length === 0) return;
@@ -131,14 +125,14 @@ inputImagenNueva.addEventListener("change", async () => {
       });
 
       const data = await res.json();
-      const url = data.url;
-      nuevasImagenesSubidas.push(url);
+
+      nuevasImagenesSubidas.push({ url: data.url, public_id: data.public_id });
 
       const contenedor = document.createElement("div");
       contenedor.className = "relative w-24 h-24";
 
       const img = document.createElement("img");
-      img.src = `http://localhost:3000${url}`;
+      img.src = data.url;
       img.className = "w-24 h-24 object-cover rounded shadow";
 
       const btnEliminar = document.createElement("button");
@@ -146,7 +140,7 @@ inputImagenNueva.addEventListener("change", async () => {
       btnEliminar.className = "absolute top-0 right-0 bg-red-600 text-white rounded-bl px-1 cursor-pointer";
       btnEliminar.type = "button";
       btnEliminar.addEventListener("click", () => {
-        const i = nuevasImagenesSubidas.indexOf(url);
+        const i = nuevasImagenesSubidas.findIndex(f => f.url === data.url);
         if (i > -1) nuevasImagenesSubidas.splice(i, 1);
         contenedor.remove();
       });
@@ -163,7 +157,6 @@ inputImagenNueva.addEventListener("change", async () => {
   inputImagenNueva.value = "";
 });
 
-// Enviar formulario para guardar cambios
 form.addEventListener("submit", e => {
   e.preventDefault();
 
