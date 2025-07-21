@@ -3,21 +3,17 @@ require('dotenv').config();
 
 const uri = process.env.MONGO_URI;
 
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(uri);
 
 async function conectarDB() {
   try {
     await client.connect();
     console.log('✅ Conectado a MongoDB');
-    return client.db('ecommerce'); // Usás esta misma base, ¿correcto?
+    return client.db('ecommerce');
   } catch (error) {
     console.error('❌ Error al conectar a MongoDB:', error);
-    return null; // 👈 esto es importante
+    return null;
   }
 }
 
 module.exports = conectarDB;
-
