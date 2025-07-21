@@ -219,8 +219,12 @@ app.get('/api/verificar-sesion', (req, res) => {
 
 // ARRANQUE
 conectarDB().then((database) => {
-  db = database;
+  if (!database) {
+    console.error('❌ No se pudo conectar a MongoDB. El servidor no se va a iniciar.');
+    process.exit(1); // corta el proceso para evitar errores en Render
+  }
 
+  db = database;
   const adminPassword = process.env.ADMIN_PASSWORD || '1234';
 
   db.collection('usuarios').findOne({ usuario: 'admin' }).then(existe => {
