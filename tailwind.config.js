@@ -2,7 +2,9 @@
 module.exports = {
   content: [
     "./public/**/*.html",
-    "./public/**/*.js"
+    "./public/**/*.js",
+    "./panel/**/*.html",
+    "./panel/**/*.js"
   ],
   theme: {
     extend: {
@@ -17,4 +19,5 @@ module.exports = {
   },
   plugins: [],
 }
+
 
