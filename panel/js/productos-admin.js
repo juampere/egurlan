@@ -27,7 +27,7 @@ document.getElementById("btn-logout").addEventListener("click", async () => {
 
 
 // Cargar categorías
-fetch('http://localhost:3000/api/categorias')
+fetch('/api/categorias')
   .then(res => res.json())
   .then(categorias => {
     categorias.forEach(cat => {
@@ -132,7 +132,7 @@ function aplicarFiltros() {
 
 function eliminarProducto(id) {
   if (confirm("¿Estás seguro de eliminar este producto?")) {
-    fetch(`http://localhost:3000/api/productos/${id}`, {
+    fetch('/api/productos/${id}`, {
       method: "DELETE"
     })
       .then(res => {
@@ -156,7 +156,7 @@ function eliminarProducto(id) {
   }
 }
 
-fetch("http://localhost:3000/api/productos")
+fetch('/api/productos")
   .then(res => res.json())
   .then(data => {
     let productosOrdenados = Array.isArray(data) ? data : [];

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+
 
 function getIdFromURL() {
   const params = new URLSearchParams(window.location.search);
@@ -25,7 +25,7 @@ function construirURLConFiltros(baseUrl, filtros) {
 
 async function fetchProductos() {
   try {
-    const res = await fetch(`${BASE_URL}/api/productos`);
+    const res = await fetch(`/api/productos`);
     if (!res.ok) throw new Error("Error al obtener productos");
     return await res.json();
   } catch (error) {

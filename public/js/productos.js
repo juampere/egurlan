@@ -22,7 +22,7 @@ function obtenerParametros() {
 const parametros = obtenerParametros();
 paginaActual = parametros.pagina;
 
-fetch('http://localhost:3000/api/productos')
+fetch('/api/productos')
   .then(res => res.json())
   .then(productos => {
     productosGlobal = productos;
@@ -43,7 +43,7 @@ function cargarCategoriasDesdeBackend() {
   optionDefault.textContent = "Todas las categorías";
   filtroSelect.appendChild(optionDefault);
 
-  fetch("http://localhost:3000/api/categorias")
+  fetch("/api/categorias")
     .then(res => res.json())
     .then(categorias => {
       categorias.forEach(cat => {

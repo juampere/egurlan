@@ -1,25 +1,28 @@
-require('dotenv').config(); // ← agregado para usar variables del archivo .env
+require('dotenv').config();
 const conectarDB = require('./db');
 const express = require('express');
 const session = require('express-session');
-const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://egurlan.onrender.com'
+];
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-let db; 
+let db;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 
 app.use(session({
   secret: 'secreto_super_seguro',
@@ -33,8 +36,16 @@ app.use(session({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   credentials: true
 }));
 
@@ -54,7 +65,7 @@ app.get('/api/productos', async (req, res) => {
   try {
     const productos = await db.collection('productos').find().toArray();
     res.json(productos);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al cargar productos desde MongoDB' });
   }
 });
@@ -65,7 +76,7 @@ app.get('/api/productos/:id', async (req, res) => {
     const producto = await db.collection('productos').findOne({ id });
     if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
     res.json(producto);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al buscar producto' });
   }
 });
@@ -78,7 +89,7 @@ app.post('/api/productos', async (req, res) => {
     nuevoProducto.id = ultimoId + 1;
     const resultado = await db.collection('productos').insertOne(nuevoProducto);
     res.status(201).json({ mensaje: 'Producto guardado', id: resultado.insertedId });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al guardar producto' });
   }
 });
@@ -90,7 +101,7 @@ app.put('/api/productos/:id', async (req, res) => {
     const resultado = await db.collection('productos').updateOne({ id }, { $set: actualizado });
     if (resultado.matchedCount === 0) return res.status(404).json({ error: 'Producto no encontrado' });
     res.json({ mensaje: 'Producto actualizado' });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al actualizar producto' });
   }
 });
@@ -100,7 +111,6 @@ app.delete('/api/productos/:id', async (req, res) => {
 
   try {
     const producto = await db.collection('productos').findOne({ id });
-
     if (!producto) return res.status(404).json({ error: 'Producto no encontrado' });
 
     if (producto.fotos && Array.isArray(producto.fotos)) {
@@ -108,9 +118,7 @@ app.delete('/api/productos/:id', async (req, res) => {
         if (foto.public_id) {
           try {
             await cloudinary.uploader.destroy(foto.public_id);
-          } catch {
-            // Si no se puede borrar una imagen, no cortamos el proceso, solo seguimos
-          }
+          } catch {}
         }
       }
     }
@@ -118,17 +126,16 @@ app.delete('/api/productos/:id', async (req, res) => {
     await db.collection('productos').deleteOne({ id });
     res.json({ mensaje: 'Producto eliminado correctamente' });
 
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al eliminar producto' });
   }
 });
-
 
 app.get('/api/categorias', async (req, res) => {
   try {
     const categorias = await db.collection('categorias').find().toArray();
     res.json(categorias);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al cargar las categorías' });
   }
 });
@@ -155,7 +162,7 @@ app.post('/api/categorias', async (req, res) => {
       categoria: { _id: resultado.insertedId, nombre: nombre.trim() }
     });
 
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al guardar la categoría' });
   }
 });
@@ -174,14 +181,11 @@ app.post('/api/upload', upload.single('imagen'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No se subió ningún archivo' });
 
   res.json({
-    url: req.file.path,             
-    public_id: req.file.filename    
+    url: req.file.path,
+    public_id: req.file.filename
   });
 });
 
-
-
-// LOGIN
 app.post('/api/login', async (req, res) => {
   const { usuario, contrasena } = req.body;
 
@@ -191,14 +195,12 @@ app.post('/api/login', async (req, res) => {
 
   try {
     const user = await db.collection('usuarios').findOne({ usuario });
-
     if (!user || user.password !== contrasena) {
       return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
     }
-
     req.session.usuario = usuario;
     res.json({ mensaje: 'Login correcto' });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error interno' });
   }
 });
@@ -217,14 +219,14 @@ app.get('/api/verificar-sesion', (req, res) => {
   }
 });
 
-// ARRANQUE
 conectarDB().then((database) => {
   if (!database) {
     console.error('❌ No se pudo conectar a MongoDB. El servidor no se va a iniciar.');
-    process.exit(1); // corta el proceso para evitar errores en Render
+    process.exit(1);
   }
 
   db = database;
+
   const adminPassword = process.env.ADMIN_PASSWORD || '1234';
 
   db.collection('usuarios').findOne({ usuario: 'admin' }).then(existe => {

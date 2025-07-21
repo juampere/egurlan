@@ -20,7 +20,7 @@ const quill = new Quill('#editorDescripcion', {
 });
 
 function cargarCategorias() {
-  return fetch("http://localhost:3000/api/categorias")
+  return fetch('/api/categorias")
     .then(res => res.json())
     .then(lista => {
       selectCategoria.innerHTML = `<option value="">Seleccionar categoría</option>`;
@@ -40,7 +40,7 @@ function cargarCategorias() {
 async function cargarDatos() {
   await cargarCategorias();
 
-  fetch(`http://localhost:3000/api/productos/${id}`)
+  fetch('/api/productos/${id}`)
     .then(r => {
       if (!r.ok) throw new Error('Producto no encontrado o error de red');
       return r.json();
@@ -119,7 +119,7 @@ inputImagenNueva.addEventListener("change", async () => {
     formData.append("imagen", archivo);
 
     try {
-      const res = await fetch("http://localhost:3000/api/upload", {
+      const res = await fetch('/api/upload", {
         method: "POST",
         body: formData
       });
@@ -212,7 +212,7 @@ form.addEventListener("submit", e => {
     fotos: [...imagenesExistentes, ...nuevasImagenesSubidas]
   };
 
-  fetch(`http://localhost:3000/api/productos/${id}`, {
+  fetch('/api/productos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(productoEditado)

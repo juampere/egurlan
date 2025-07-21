@@ -89,7 +89,7 @@ function crearCardProducto(prod) {
 
 
 // Cargar productos y mostrar destacados + novedades
-fetch('http://localhost:3000/api/productos')
+fetch('/api/productos')
   .then(res => res.json())
   .then(productos => {
     todosLosProductos = productos.filter(p => p.destacado).slice(0, 4);
