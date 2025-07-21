@@ -132,7 +132,7 @@ function aplicarFiltros() {
 
 function eliminarProducto(id) {
   if (confirm("¿Estás seguro de eliminar este producto?")) {
-    fetch('/api/productos/${id}`, {
+    fetch(`/api/productos/${id}`, {
       method: "DELETE"
     })
       .then(res => {
@@ -156,7 +156,8 @@ function eliminarProducto(id) {
   }
 }
 
-fetch('/api/productos")
+
+fetch('/api/productos')
   .then(res => res.json())
   .then(data => {
     let productosOrdenados = Array.isArray(data) ? data : [];
