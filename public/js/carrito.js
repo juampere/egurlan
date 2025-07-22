@@ -48,10 +48,10 @@ function mostrarCarrito() {
     const subtotal = prod.precio * prod.cantidad;
     total += subtotal;
 
+    // Acá se asume que las URLs ya están completas y correctas (de Cloudinary o externas)
+    // Si no hay foto, ponemos el placeholder
     const urlMiniatura = prod.fotos?.[0]?.url
-      ? (prod.fotos[0].url.startsWith("/uploads/")
-          ? "http://localhost:3000" + prod.fotos[0].url
-          : prod.fotos[0].url)
+      ? prod.fotos[0].url
       : "https://placehold.co/600x400?text=Sin+Imagen";
 
     const div = document.createElement("div");

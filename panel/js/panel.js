@@ -37,7 +37,7 @@ const quill = new Quill('#editorDescripcion', {
 
 async function cargarCategorias() {
   try {
-    const res = await fetch('/api/categorias");
+    const res = await fetch('/api/categorias');
     if (!res.ok) throw new Error("Error al cargar categorías");
     const categorias = await res.json();
 
@@ -60,7 +60,7 @@ btnAgregarCategoria.addEventListener("click", async () => {
   if (!nuevaCat) return alert("Escribí el nombre de la categoría.");
 
   try {
-    const res = await fetch('/api/categorias", {
+    const res = await fetch('/api/categorias', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nombre: nuevaCat })
@@ -213,7 +213,7 @@ formulario.addEventListener("submit", async e => {
       const formData = new FormData();
       formData.append("imagen", archivo);
       try {
-        const res = await fetch('/api/upload", {
+        const res = await fetch('/api/upload', {
           method: "POST",
           body: formData
         });
@@ -249,7 +249,7 @@ formulario.addEventListener("submit", async e => {
   };
 
   try {
-    const res = await fetch('/api/productos", {
+    const res = await fetch('/api/productos', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(producto)
