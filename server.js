@@ -13,20 +13,17 @@ const allowedOrigins = [
   'https://egurlan.onrender.com'
 ];
 
-// Configuración de CORS
 const corsOptions = {
   origin: (origin, callback) => {
-    // Permitimos si no hay origin (por ejemplo, desde cURL o Postman),
-    // si está en la lista, o si es un subdominio de Netlify
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.netlify.app')) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || origin.endsWith('.netlify.app')) {
       callback(null, true);
     } else {
       callback(new Error('No permitido por CORS'));
     }
-  }
+  },
+  credentials: true
 };
-
-app.use(cors(corsOptions));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +35,8 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+app.use(cors(corsOptions));
 
 app.use(session({
   secret: 'secreto_super_seguro',
@@ -52,18 +51,6 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
-  },
-  credentials: true
-}));
-
 app.use("/panel", (req, res, next) => {
   const archivosPublicos = ["/login.html", "/js/login.js"];
   if (archivosPublicos.includes(req.path) || req.session.usuario) {
@@ -76,6 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/panel', express.static(path.join(__dirname, 'panel')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Rutas API productos
 app.get('/api/productos', async (req, res) => {
   try {
     const productos = await db.collection('productos').find().toArray();
@@ -146,6 +134,7 @@ app.delete('/api/productos/:id', async (req, res) => {
   }
 });
 
+// Rutas API categorías
 app.get('/api/categorias', async (req, res) => {
   try {
     const categorias = await db.collection('categorias').find().toArray();
@@ -182,6 +171,7 @@ app.post('/api/categorias', async (req, res) => {
   }
 });
 
+// Cloudinary y multer para subir imágenes
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -201,6 +191,7 @@ app.post('/api/upload', upload.single('imagen'), (req, res) => {
   });
 });
 
+// Login y sesión
 app.post('/api/login', async (req, res) => {
   const { usuario, contrasena } = req.body;
 
