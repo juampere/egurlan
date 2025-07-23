@@ -13,6 +13,21 @@ const allowedOrigins = [
   'https://egurlan.onrender.com'
 ];
 
+// Configuración de CORS
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Permitimos si no hay origin (por ejemplo, desde cURL o Postman),
+    // si está en la lista, o si es un subdominio de Netlify
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.netlify.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
